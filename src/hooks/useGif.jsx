@@ -1,23 +1,26 @@
 import { useState } from "react"
+import { reqGif } from '../service/gif'
 
 export const useGif = () => {
 
-    const [gif, setGif] = useState('')
+    const [gifs, setGifs] = useState([])
+    const [nombreCategoria, setNombreCategoria] = useState('')
 
-    const reqGif = async () =>{
-        await fetch('http://YHWxYmHKdTgoseAcl8SsSIfwdT9zClQl').then(async(resp)=>{
-            await resp.json().then(({data})=>{
-                setGif(data.images.original.url)
-            })
-        }).catch(console.error)
+    const handleGetGif = (e, categoria) =>{
+        //evita la recarga completa del navegador
+        e.preventDefault()
+        
+        reqGif(categoria).then((gifs) => {
+            setGifs(gifs)
+        })
+
+        setNombreCategoria(categoria)
     }
 
-    const handleGetGif = () =>{
-        reqGif()
-    }
-
+    //retorno hook
     return{
         handleGetGif,
-        gif
+        gifs,
+        nombreCategoria
     }
 }
